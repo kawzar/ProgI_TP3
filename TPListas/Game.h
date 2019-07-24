@@ -15,10 +15,12 @@ public:
 
 private:
 	List train;
+	Wagon*wagons[3];
 	RenderWindow *window;
 	Texture txBackground;
 	Sprite background;
 	const float wagonDistance = 65.0f;
+	float platforms[5];
 
 	void InitWindow();
 	void Update();

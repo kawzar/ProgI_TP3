@@ -6,17 +6,24 @@ using namespace std;
 
 Game::Game()
 {
+	float positions[] = { 142, 256, 370, 485, 610};
+
+	for (int i = 0; i < 5; i++)
+	{
+		platforms[i] = positions[i];
+	}
+
 	srand(time(NULL));
 
 	int number = rand() % 10 + 1;
 
-	Locomotive* l = new Locomotive(50, 150.f, -1);
-	Wagon* w = new Wagon(150.f, 150.f, number);
+	Locomotive* l = new Locomotive(30.f, positions[0], -1, positions);
+	Wagon* w = new Wagon(150.f, positions[0], number, positions);
 	number = rand() % 10 + 1;
-	Wagon* w2 = new Wagon(150.f, 150.f, number);
+	Wagon* w2 = new Wagon(150.f, positions[0], number, positions);
 	
 	number = rand() % 10 + 1;
-	Wagon* w3 = new Wagon(150.f, 150.f, number);
+	Wagon* w3 = new Wagon(150.f, positions[0], number, positions);
 
 
 	InitWindow();
@@ -46,7 +53,7 @@ void Game::Draw()
 
 void Game::InitWindow()
 {
-	window = new RenderWindow(VideoMode(800, 600), "TP Listas");
+	window = new RenderWindow(VideoMode(1280, 720), "TP Listas");
 	window->setMouseCursorVisible(true);
 	window->setFramerateLimit(60);
 }

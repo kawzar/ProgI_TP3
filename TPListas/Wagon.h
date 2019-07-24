@@ -6,7 +6,7 @@ using namespace sf;
 class Wagon
 {
 public:
-	Wagon(float x, float y, int value);
+	Wagon(float x, float y, int value, float* positions);
 	~Wagon();
 	void Draw(RenderWindow* wnd);
 	void Update();
@@ -23,6 +23,8 @@ protected:
 	Font font;
 	float x, y;
 	float velocity = 3.f;
+	float positions[5];
+	int currentPosition;
 
 friend class Node;
 friend class List;

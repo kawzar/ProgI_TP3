@@ -3,13 +3,22 @@
 
 using namespace std;
 
-Wagon::Wagon(float xpos, float ypos, int v)
+Wagon::Wagon(float xpos, float ypos, int v, float* pos)
 {
 	x = xpos;
 	y = ypos;
 	value = v;
+	currentPosition = 0;
 
-	if (!texture.loadFromFile("Images/vagon.png")) { cout << "Error loading"; }
+	for (int i = 0; i < 5; i++)
+	{
+		positions[i] = pos[i];
+	}
+
+	if (!texture.loadFromFile("Images/vagon.png")) 
+	{ 
+		cout << "Error loading sprite"; 
+	}
 	sprite.setTexture(texture);
 	sprite.setOrigin(texture.getSize().x / 2, texture.getSize().y);
 
@@ -39,6 +48,13 @@ void Wagon::Draw(RenderWindow* wnd)
 void Wagon::Update() 
 {
 	x += velocity;
+
+	if (x >= 1280.f && currentPosition < 4) 
+	{
+		currentPosition++;
+		y = positions[currentPosition];
+		x = 0.f;
+	}
 	sprite.setPosition(x + velocity, y);
 	text.setPosition(x, y);
 }
