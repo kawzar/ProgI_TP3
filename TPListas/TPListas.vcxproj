@@ -159,6 +159,7 @@
     <ClInclude Include="Locomotive.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="Problem.h" />
     <ClInclude Include="Wagon.h" />
   </ItemGroup>
   <ItemGroup>
@@ -172,6 +173,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Problem.cpp" />
     <ClCompile Include="TPListas.cpp" />
     <ClCompile Include="Wagon.cpp" />
   </ItemGroup>

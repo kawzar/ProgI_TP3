@@ -2,7 +2,7 @@
 
 
 
-Locomotive::Locomotive(float xpos, float ypos, int v, float* positions) : Wagon(xpos, ypos, v, positions)
+Locomotive::Locomotive(float xpos, float ypos, int v, float* positions) : Wagon(xpos, ypos, v, positions, true)
 {
 	if (!texture.loadFromFile("Images/locomotora.png")) { }
 	sprite.setTexture(texture);

@@ -20,11 +20,12 @@ void List::Next() {
 	}
 }
 
-void List::First() {
+Wagon* List::First() {
 	current = first;
+	return first->wagon;
 }
 
-void List::Last() {
+Wagon* List::Last() {
 	current = first;
 	if (!IsEmpty()) {
 		while (current->next) {
@@ -32,6 +33,7 @@ void List::Last() {
 		}
 	}
 
+	return current->wagon;
 }
 
 bool List::IsEmpty() {

@@ -3,12 +3,13 @@
 
 using namespace std;
 
-Wagon::Wagon(float xpos, float ypos, int v, float* pos)
+Wagon::Wagon(float xpos, float ypos, int v, float* pos, bool inList)
 {
 	x = xpos;
 	y = ypos;
 	value = v;
 	currentPosition = 0;
+	isInList = inList;
 
 	for (int i = 0; i < 5; i++)
 	{
@@ -47,7 +48,10 @@ void Wagon::Draw(RenderWindow* wnd)
 
 void Wagon::Update() 
 {
-	x += velocity;
+	if (isInList)
+	{
+		x += velocity;
+	}
 
 	if (x >= 1280.f && currentPosition < 4) 
 	{
@@ -76,4 +80,27 @@ sf::Vector2f Wagon::GetPosition()
 float Wagon::GetWidth()
 {
 	return sprite.getGlobalBounds().width;
+}
+
+bool Wagon::Intersects(sf::FloatRect rect) 
+{
+	return sprite.getGlobalBounds().intersects(rect);
+}
+
+sf::FloatRect Wagon::GetBounds(){
+	return sprite.getGlobalBounds();
+}
+
+bool Wagon::IsInList() {
+	return isInList;
+}
+
+int Wagon::Value()
+{
+	return value;
+}
+
+void Wagon::MarkInList()
+{
+	isInList = true;
 }

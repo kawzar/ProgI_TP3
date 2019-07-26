@@ -6,14 +6,22 @@ using namespace sf;
 class Wagon
 {
 public:
-	Wagon(float x, float y, int value, float* positions);
+	Wagon(float x, float y, int value, float* positions, bool inList);
 	~Wagon();
 	void Draw(RenderWindow* wnd);
 	void Update();
+	bool IsInList();
 
 	void SetPosition(Vector2f v);
 	Vector2f GetPosition();
 	float GetWidth();
+	int Value();
+	void MarkInList();
+
+	bool Intersects(sf::FloatRect rect);
+
+	sf::FloatRect GetBounds();
+
 
 protected:
 	int value;
@@ -25,7 +33,7 @@ protected:
 	float velocity = 3.f;
 	float positions[5];
 	int currentPosition;
-
+	bool isInList = false;
 friend class Node;
 friend class List;
 };

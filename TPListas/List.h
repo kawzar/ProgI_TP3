@@ -11,8 +11,8 @@ public:
 	~List();
 
 	void Next();
-	void First();
-	void Last();
+	Wagon* First();
+	Wagon* Last();
 	bool IsEmpty();
 	void Insert(Wagon* v);
 	void Delete(Wagon* v);
