@@ -43,7 +43,11 @@ Wagon::~Wagon()
 void Wagon::Draw(RenderWindow* wnd)
 {
 	wnd->draw(sprite);
-	wnd->draw(text);
+
+	if (value > 0)
+	{
+		wnd->draw(text);
+	}
 }
 
 void Wagon::Update() 
@@ -103,4 +107,13 @@ int Wagon::Value()
 void Wagon::MarkInList()
 {
 	isInList = true;
+}
+
+void Wagon::SetValue(int v)
+{
+	value = v;
+	text = Text(std::to_string(value), font, 30);
+	text.setFillColor(sf::Color::Yellow);
+	text.setOrigin(text.getOrigin().x, sprite.getOrigin().y - 10);
+	text.setPosition(x, y);
 }

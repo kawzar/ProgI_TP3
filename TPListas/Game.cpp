@@ -34,9 +34,9 @@ Game::Game()
 	train.Insert(w2);
 	train.Insert(w3);
 
-	wagons[0] = new Wagon(150.f, positions[1], number, positions, false);
-	wagons[1] = new Wagon(150.f, positions[2], number, positions, false);
-	wagons[2] = new Wagon(150.f, positions[3], number, positions, false);
+	wagons[0] = new Wagon(150.f, positions[1], -1, positions, false);
+	wagons[1] = new Wagon(150.f, positions[2], -1, positions, false);
+	wagons[2] = new Wagon(150.f, positions[3], -1, positions, false);
 }
 
 
@@ -153,6 +153,7 @@ void Game::CheckWinLoseConditionForWagon(bool isWin)
 {
 	if (isWin)
 	{
+		currentWagon->SetValue(currentProblem->Value());
 		train.Insert(currentWagon);
 		currentWagon->MarkInList();
 		cout << "Win" << endl;

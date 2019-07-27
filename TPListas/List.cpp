@@ -117,7 +117,7 @@ void List::OrderSprites()
 	{
 		if (!isFirst) 
 		{
-			Vector2f newPosition = Vector2f(lastPosition.x - node->wagon->GetWidth(), node->wagon->GetPosition().y);
+			Vector2f newPosition = Vector2f(lastPosition.x - node->wagon->GetWidth(), lastPosition.y);
 			node->wagon->SetPosition(newPosition);
 			lastPosition = newPosition;
 			node->wagon->Update();

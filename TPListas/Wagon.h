@@ -17,6 +17,7 @@ public:
 	float GetWidth();
 	int Value();
 	void MarkInList();
+	void SetValue(int v);
 
 	bool Intersects(sf::FloatRect rect);
 
