@@ -109,6 +109,7 @@ void List::Draw(sf::RenderWindow * wnd)
 
 void List::OrderSprites()
 {
+	cout << "ordered sprite" << endl;
 	pnode node = first;
 	sf::Vector2f lastPosition = first->wagon->GetPosition();
 	bool isFirst = true;
@@ -119,8 +120,7 @@ void List::OrderSprites()
 			Vector2f newPosition = Vector2f(lastPosition.x - node->wagon->GetWidth(), node->wagon->GetPosition().y);
 			node->wagon->SetPosition(newPosition);
 			lastPosition = newPosition;
-
-			cout << lastPosition.x << endl;
+			node->wagon->Update();
 		}
 		else 
 		{

@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Game.h"
 #include <iostream>
 
@@ -35,8 +35,8 @@ Game::Game()
 	train.Insert(w3);
 
 	wagons[0] = new Wagon(150.f, positions[1], number, positions, false);
-	wagons[1] = new Wagon(150.f, positions[1], number, positions, false);
-	wagons[2] = new Wagon(150.f, positions[1], number, positions, false);
+	wagons[1] = new Wagon(150.f, positions[2], number, positions, false);
+	wagons[2] = new Wagon(150.f, positions[3], number, positions, false);
 }
 
 
@@ -46,8 +46,9 @@ Game::~Game()
 
 void Game::Update() 
 {
-	if (currentProblem == NULL)
+	if (!isCurrentProblem)
 	{
+		cout << "Current problem null" << endl;
 		train.Update();
 
 		for (int i = 0; i < 3; i++)
@@ -63,14 +64,19 @@ void Game::Update()
 		currentProblem->Update();
 	}
 
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < 3 && !isCurrentProblem; i++)
 	{
-		if (!wagons[i]->IsInList() && currentProblem == NULL) 
+		if (!wagons[i]->IsInList()) 
 		{
 			if (wagons[i]->Intersects(train.First()->GetBounds()))
 			{
-				currentWagon = wagons[i];
-				currentProblem = new Problem();
+				if (currentWagon != wagons[i])
+				{
+					cout << "Collided" << endl;
+					currentWagon = wagons[i];
+					currentProblem = new Problem();
+					isCurrentProblem = true;
+				}
 			}
 		}
 	}
@@ -108,6 +114,7 @@ void Game::Loop()
 	while (window->isOpen()) 
 	{
 		Update();
+		EventHandling();
 		Draw();
 	}
 }
@@ -122,41 +129,20 @@ void Game::EventHandling()
 		case Event::Closed:
 			window->close();
 			break;
-		case Event::KeyPressed:
-			if (currentProblem != NULL)
+		case Event::TextEntered:
+			if (isCurrentProblem)
 			{
-				switch (evt.key.code)
+				if (evt.text.unicode > 47 && evt.text.unicode < 58)//si lo que se escribi� se encuentra entre 0 y 9
 				{
-				case Keyboard::Num0:
-					CheckWinLoseConditionForWagon(currentProblem->Value() == 0 && currentWagon->Value() == 0);
-					break;
-				case Keyboard::Num1:
-					CheckWinLoseConditionForWagon(currentProblem->Value() == 1 && currentWagon->Value() == 1);
-					break;
-				case Keyboard::Num2:
-					CheckWinLoseConditionForWagon(currentProblem->Value() == 2 && currentWagon->Value() == 2);
-					break;
-				case Keyboard::Num3:
-					CheckWinLoseConditionForWagon(currentProblem->Value() == 3 && currentWagon->Value() == 3);
-					break;
-				case Keyboard::Num4:
-					CheckWinLoseConditionForWagon(currentProblem->Value() == 4 && currentWagon->Value() == 4);
-					break;
-				case Keyboard::Num5:
-					CheckWinLoseConditionForWagon(currentProblem->Value() == 5 && currentWagon->Value() == 5); 
-					break;
-				case Keyboard::Num6:
-					CheckWinLoseConditionForWagon(currentProblem->Value() == 6 && currentWagon->Value() == 6);
-					break;
-				case Keyboard::Num7:
-					CheckWinLoseConditionForWagon(currentProblem->Value() == 7 && currentWagon->Value() == 7);
-					break;
-				case Keyboard::Num8:
-					CheckWinLoseConditionForWagon(currentProblem->Value() == 8 && currentWagon->Value() == 8);
-					break;
-				case Keyboard::Num9:
-					CheckWinLoseConditionForWagon(currentProblem->Value() == 9 && currentWagon->Value() == 9);
-					break;
+					input += evt.text.unicode;//voy agregando n�meros a la cadena
+					cout << input << endl;//muestro lo que voy agregando
+				}
+				if (evt.text.unicode == 13)//si presiono ENTER aviso que no quiero leer m�s n�meros
+				{
+					inputResult = stoi(input);
+					input = "";
+					cout << input << endl;
+					CheckWinLoseConditionForWagon(inputResult == currentProblem->Value());
 				}
 			}
 		}
@@ -169,12 +155,16 @@ void Game::CheckWinLoseConditionForWagon(bool isWin)
 	{
 		train.Insert(currentWagon);
 		currentWagon->MarkInList();
-		currentWagon = NULL;
-		delete currentProblem;
-		currentProblem = NULL;
+		cout << "Win" << endl;
 	}
 	else
 	{
 		train.Delete(train.Last());
+		delete currentWagon;
+		cout << "Lose" << endl;
 	}
+
+	delete currentProblem;
+	currentProblem = NULL;
+	isCurrentProblem = false;
 }

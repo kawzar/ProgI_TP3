@@ -25,6 +25,9 @@ private:
 	float platforms[5];
 	Problem* currentProblem;
 	Wagon* currentWagon;
+	string input;
+	int inputResult;
+	bool isCurrentProblem = false;
 
 	void InitWindow();
 	void Update();
