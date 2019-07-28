@@ -7,6 +7,9 @@
 
 int main()
 {
+
+	srand(std::time(NULL));
+
 	Game* game = new Game();
 	game->Loop();
 }

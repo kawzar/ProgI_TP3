@@ -89,6 +89,8 @@ void List::Delete(Wagon* v) {
 
 void List::Update()
 {
+	OrderSprites(); 
+
 	pnode node;
 	node = first;
 	while (node != NULL) {
@@ -109,7 +111,6 @@ void List::Draw(sf::RenderWindow * wnd)
 
 void List::OrderSprites()
 {
-	cout << "ordered sprite" << endl;
 	pnode node = first;
 	Wagon* lastWagon = first->wagon;
 	bool isFirst = true;
@@ -117,7 +118,7 @@ void List::OrderSprites()
 	{
 		if (!isFirst) 
 		{
-			Vector2f newPosition = Vector2f(lastWagon->GetPosition().x - node->wagon->GetWidth(), node->wagon->GetPosition().y);
+			Vector2f newPosition = Vector2f(lastWagon->GetPosition().x - node->wagon->GetWidth(), lastWagon->GetPosition().y);
 			node->wagon->SetPosition(newPosition);
 			lastWagon = node->wagon;
 		}

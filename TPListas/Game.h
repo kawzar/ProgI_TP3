@@ -28,6 +28,7 @@ private:
 	int amountOfWagons = 2; 
 	Text txtGameOver;
 	Door* door;
+	bool isGameOver;
 
 	// Problems
 	Problem* currentProblem;

@@ -61,9 +61,9 @@ void Wagon::SetPosition(Vector2f v)
 	x = v.x;
 	y = v.y;
 
-	if (x >= 1280.f - GetWidth() && currentPosition <= 4)
+	// Reposition if out of the screen
+	if (x >= 1400 && currentPosition <= 4)
 	{
-		cout << "Changed wagon position y " << y << endl;
 		currentPosition++;
 		y = positions[currentPosition];
 		x = 0.f;
