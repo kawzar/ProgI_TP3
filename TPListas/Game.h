@@ -5,6 +5,7 @@
 #include "Locomotive.h"
 #include "Wagon.h"
 #include "Problem.h"
+#include "Door.h"
 
 using namespace sf;
 using namespace std;
@@ -24,6 +25,9 @@ private:
 	Sprite background;
 	const float wagonDistance = 65.0f;
 	float platforms[5];
+	int amountOfWagons = 2; 
+	Text txtGameOver;
+	Door* door;
 
 	// Problems
 	Problem* currentProblem;
@@ -54,5 +58,6 @@ private:
 	void UpdateClock();
 	void EventHandling();
 	void InitSound();
+	void EndGame(bool isWin);
 };
 

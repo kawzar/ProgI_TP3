@@ -111,16 +111,15 @@ void List::OrderSprites()
 {
 	cout << "ordered sprite" << endl;
 	pnode node = first;
-	sf::Vector2f lastPosition = first->wagon->GetPosition();
+	Wagon* lastWagon = first->wagon;
 	bool isFirst = true;
 	while (node) 
 	{
 		if (!isFirst) 
 		{
-			Vector2f newPosition = Vector2f(lastPosition.x - node->wagon->GetWidth(), lastPosition.y);
+			Vector2f newPosition = Vector2f(lastWagon->GetPosition().x - node->wagon->GetWidth(), node->wagon->GetPosition().y);
 			node->wagon->SetPosition(newPosition);
-			lastPosition = newPosition;
-			node->wagon->Update();
+			lastWagon = node->wagon;
 		}
 		else 
 		{

@@ -53,20 +53,21 @@ void Wagon::Update()
 		x += velocity;
 	}
 
-	if (x >= 1280.f && currentPosition <= 4) 
-	{
-		currentPosition++;
-		y = positions[currentPosition];
-		x = 0.f;
-	}
-	sprite.setPosition(x + velocity, y);
-	text.setPosition(x, y);
+	SetPosition(Vector2f(x, y));
 }
 
 void Wagon::SetPosition(Vector2f v) 
 {
 	x = v.x;
 	y = v.y;
+
+	if (x >= 1280.f - GetWidth() && currentPosition <= 4)
+	{
+		cout << "Changed wagon position y " << y << endl;
+		currentPosition++;
+		y = positions[currentPosition];
+		x = 0.f;
+	}
 
 	sprite.setPosition(x, y);
 	text.setPosition(x, y);

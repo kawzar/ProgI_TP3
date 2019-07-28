@@ -9,6 +9,7 @@ Game::Game()
 	float positions[] = { 142, 256, 370, 485, 610};
 	currentProblem = NULL;
 	currentWagon = NULL;
+	amountOfWagons = 2;
 
 	for (int i = 0; i < 5; i++)
 	{
@@ -19,24 +20,27 @@ Game::Game()
 
 	int number = rand() % 10 + 1;
 
-	Locomotive* l = new Locomotive(30.f, positions[0], -1, positions);
-	Wagon* w = new Wagon(150.f, positions[0], number, positions, true);
+	Locomotive* l = new Locomotive(30.f, positions[0], -1, platforms);
+	Wagon* w = new Wagon(150.f, positions[0], number, platforms, true);
 	number = rand() % 10 + 1;
-	Wagon* w2 = new Wagon(150.f, positions[0], number, positions, true);
-	
-	number = rand() % 10 + 1;
-	Wagon* w3 = new Wagon(150.f, positions[0], number, positions, true);
+	Wagon* w2 = new Wagon(150.f, positions[0], number, platforms, true);
 
 
 	InitWindow();
 	train.Insert(l);
 	train.Insert(w);
 	train.Insert(w2);
-	train.Insert(w3);
 
-	wagons[0] = new Wagon(150.f, positions[1], -1, positions, false);
-	wagons[1] = new Wagon(150.f, positions[2], -1, positions, false);
-	wagons[2] = new Wagon(150.f, positions[3], -1, positions, false);
+	float position = rand() % 1000 + 400;
+	wagons[0] = new Wagon(position, positions[1], -1, platforms, false);
+	
+	position = rand() % 1000 + 400;
+	wagons[1] = new Wagon(position, positions[2], -1, platforms, false);
+
+	position = rand() % 1000 + 400;
+	wagons[2] = new Wagon(position, positions[3], -1, platforms, false);
+
+	door = new Door(1200.0f, platforms[4]);
 
 	InitSound();
 }
@@ -63,6 +67,12 @@ void Game::Update()
 	else
 	{
 		currentProblem->Update();
+	}
+
+
+	if (door->getBounds().intersects(train.First()->GetBounds()))
+	{
+		EndGame(true);
 	}
 
 	for (int i = 0; i < 3 && !isCurrentProblem; i++)
@@ -106,6 +116,8 @@ void Game::Draw()
 			wagons[i]->Draw(window);
 		}
 	}
+
+	door->draw(window);
 
 	window->display();
 }
@@ -165,6 +177,8 @@ void Game::CheckWinLoseConditionForWagon(bool isWin)
 		train.Insert(currentWagon);
 		currentWagon->MarkInList();
 		correctSound.play();
+		amountOfWagons++;
+		currentWagon = NULL;
 		cout << "Win" << endl;
 	}
 	else
@@ -173,7 +187,13 @@ void Game::CheckWinLoseConditionForWagon(bool isWin)
 		delete currentWagon;
 		currentWagon = NULL;
 		failSound.play();
+		amountOfWagons--;
 		cout << "Lose" << endl;
+
+		if (amountOfWagons <= 2)
+		{
+			EndGame(false);
+		}
 	}
 
 	delete currentProblem;
@@ -222,4 +242,36 @@ void Game::InitSound()
 	correctSound.setBuffer(correctSb);
 	failSound.setBuffer(failSb);
 	clockSound.setBuffer(clockSb);
+}
+
+void Game::EndGame(bool isWin)
+{
+	if (isWin) 
+	{
+		txtGameOver = Text("You won!", font, 15);
+		txtGameOver.setFillColor(sf::Color::Green);
+
+	}
+	else 
+	{
+		txtGameOver = Text("You Lost!", font, 15);
+		txtGameOver.setFillColor(sf::Color::Red);
+	}
+
+	txtTime.setFillColor(Color::Black);
+	txtGameOver.setPosition(200, 250);
+
+
+	Event evt;
+	while (window->waitEvent(evt))
+	{
+		if (evt.type == Event::Closed) {
+			window->close();
+		}
+
+		window->clear(Color::Black);
+		window->draw(txtGameOver);
+		window->draw(txtTime);
+		window->display();
+	}
 }
