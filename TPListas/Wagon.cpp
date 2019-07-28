@@ -28,11 +28,7 @@ Wagon::Wagon(float xpos, float ypos, int v, float* pos, bool inList)
 		cout << "Couldn't load font";
 	}
 
-	cout << "Value " << value << endl;
-	text = Text(std::to_string(value), font, 30);
-	text.setFillColor(sf::Color::Yellow);
-	text.setOrigin(text.getOrigin().x, sprite.getOrigin().y - 10);
-	text.setPosition(x, y);
+	SetValue(value);
 }
 
 
@@ -57,7 +53,7 @@ void Wagon::Update()
 		x += velocity;
 	}
 
-	if (x >= 1280.f && currentPosition < 4) 
+	if (x >= 1280.f && currentPosition <= 4) 
 	{
 		currentPosition++;
 		y = positions[currentPosition];

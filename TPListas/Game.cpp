@@ -15,7 +15,7 @@ Game::Game()
 		platforms[i] = positions[i];
 	}
 
-	srand(time(NULL));
+	srand(std::time(NULL));
 
 	int number = rand() % 10 + 1;
 
@@ -37,6 +37,8 @@ Game::Game()
 	wagons[0] = new Wagon(150.f, positions[1], -1, positions, false);
 	wagons[1] = new Wagon(150.f, positions[2], -1, positions, false);
 	wagons[2] = new Wagon(150.f, positions[3], -1, positions, false);
+
+	InitSound();
 }
 
 
@@ -48,7 +50,6 @@ void Game::Update()
 {
 	if (!isCurrentProblem)
 	{
-		cout << "Current problem null" << endl;
 		train.Update();
 
 		for (int i = 0; i < 3; i++)
@@ -76,9 +77,15 @@ void Game::Update()
 					currentWagon = wagons[i];
 					currentProblem = new Problem();
 					isCurrentProblem = true;
+					InitClock();
 				}
 			}
 		}
+	}
+
+	if (isCurrentProblem)
+	{
+		UpdateClock();
 	}
 }
 
@@ -90,10 +97,11 @@ void Game::Draw()
 	if (currentProblem != NULL)
 	{
 		currentProblem->Draw(window);
+		window->draw(txtTime);
 	}
 
 	for (int i = 0; i < 3; i++) {
-		if (!wagons[i]->IsInList())
+		if (wagons[i] != NULL && !wagons[i]->IsInList())
 		{
 			wagons[i]->Draw(window);
 		}
@@ -156,16 +164,62 @@ void Game::CheckWinLoseConditionForWagon(bool isWin)
 		currentWagon->SetValue(currentProblem->Value());
 		train.Insert(currentWagon);
 		currentWagon->MarkInList();
+		correctSound.play();
 		cout << "Win" << endl;
 	}
 	else
 	{
 		train.Delete(train.Last());
 		delete currentWagon;
+		currentWagon = NULL;
+		failSound.play();
 		cout << "Lose" << endl;
 	}
 
 	delete currentProblem;
 	currentProblem = NULL;
 	isCurrentProblem = false;
+}
+
+void Game::InitClock() {
+	time = sf::seconds(30.0f);
+	int seconds = time.asSeconds();
+
+	if (!font.loadFromFile("Fonts/Less.otf"))
+	{
+		cout << "Couldn't load font";
+	}
+
+	txtTime = Text(std::to_string(seconds), font, 15);
+	txtTime.setFillColor(sf::Color::White);
+	txtTime.setPosition(15, 15);
+}
+
+void Game::UpdateClock() {
+	int previousSecond = time.asSeconds();
+	time -= clock.restart();
+
+	int seconds = time.asSeconds();
+	
+	if (seconds <= 0)
+	{
+		CheckWinLoseConditionForWagon(false);
+	}
+
+	txtTime.setString(std::to_string(seconds));
+
+	if (seconds != previousSecond) {
+		clockSound.play();
+	}
+}
+
+void Game::InitSound()
+{
+	correctSb.loadFromFile("Sounds/smw_coin.wav");
+	failSb.loadFromFile("Sounds/explosion.wav");
+	clockSb.loadFromFile("Sounds/tick.wav");
+
+	correctSound.setBuffer(correctSb);
+	failSound.setBuffer(failSb);
+	clockSound.setBuffer(clockSb);
 }
