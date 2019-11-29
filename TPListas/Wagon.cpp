@@ -38,6 +38,8 @@ Wagon::~Wagon()
 
 void Wagon::Draw(RenderWindow* wnd)
 {
+	if (!wnd) return;
+
 	wnd->draw(sprite);
 
 	if (value > 0)
@@ -113,4 +115,9 @@ void Wagon::SetValue(int v)
 	text.setFillColor(sf::Color::Yellow);
 	text.setOrigin(text.getOrigin().x, sprite.getOrigin().y - 10);
 	text.setPosition(x, y);
+}
+
+void Wagon::SetNotInList()
+{
+	isInList = false;
 }

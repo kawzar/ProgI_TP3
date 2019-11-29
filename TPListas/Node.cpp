@@ -11,4 +11,5 @@ Node::Node(Wagon* v, Node* n)
 
 Node::~Node()
 {
+	delete wagon;
 }

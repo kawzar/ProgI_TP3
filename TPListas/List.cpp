@@ -43,8 +43,8 @@ bool List::IsEmpty() {
 void List::Insert(Wagon* v) {
 	pnode previous;
 
-	if (IsEmpty() || first->wagon->value > v->value) {
-		first = new Node(v, first);
+	if (IsEmpty() || first->wagon->value >= v->value) {
+		first = new Node(v, NULL);
 	}
 	else 
 	{
@@ -65,23 +65,31 @@ void List::Delete(Wagon* v) {
 
 	node = first;
 	previous = NULL;
+	cout << "Delete" << endl;
 
-	while (node && node->wagon->value < v->value) {
+	do {
 		previous = node;
 		node = node->next;
-	}
+	} while (node != NULL && node->wagon->value < v->value);
+
 
 	if (!node || node->wagon->value != v->value) {
+		cout << "return" << endl;
 		return;
 	}
 	else 
 	{ // delete node
 		if (!previous) { // first element
 			first = node->next;
+			cout << "first" << endl;
 		}
 		else { // other
 			previous->next = node->next;
+			cout << "other" << endl;
 		}
+
+		delete node;
+		node = NULL;
 	}
 
 	OrderSprites();
@@ -103,7 +111,7 @@ void List::Draw(sf::RenderWindow * wnd)
 {
 	pnode node;
 	node = first;
-	while (node != NULL) {
+	while (node != NULL && node->wagon != NULL && node->wagon->isInList) {
 		node->wagon->Draw(wnd);
 		node = node->next;
 	}
@@ -114,7 +122,7 @@ void List::OrderSprites()
 	pnode node = first;
 	Wagon* lastWagon = first->wagon;
 	bool isFirst = true;
-	while (node) 
+	while (node != NULL) 
 	{
 		if (!isFirst) 
 		{

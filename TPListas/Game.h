@@ -28,7 +28,7 @@ private:
 	int amountOfWagons = 2; 
 	Text txtGameOver;
 	Door* door;
-	bool isGameOver;
+	bool isGameOver, isWin;
 
 	// Problems
 	Problem* currentProblem;
@@ -59,6 +59,6 @@ private:
 	void UpdateClock();
 	void EventHandling();
 	void InitSound();
-	void EndGame(bool isWin);
+	void EndGame();
 };
 

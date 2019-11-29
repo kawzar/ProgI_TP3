@@ -18,6 +18,7 @@ public:
 	int Value();
 	void MarkInList();
 	void SetValue(int v);
+	void SetNotInList();
 
 	bool Intersects(sf::FloatRect rect);
 

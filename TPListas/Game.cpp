@@ -9,7 +9,7 @@ Game::Game()
 	float positions[] = { 142, 256, 370, 485, 610};
 	currentProblem = NULL;
 	currentWagon = NULL;
-	amountOfWagons = 2;
+	amountOfWagons = 3; // include locomotive
 	isGameOver = false;
 	
 	int number = rand() % 10 + 1;
@@ -49,8 +49,8 @@ void Game::Update()
 	 // check collision with dooor
 	if (door->getBounds().intersects(train.First()->GetBounds()))
 	{
-		cout << "End game" << endl;
-		EndGame(true);
+		isGameOver = true;
+		isWin = true;
 	}
 
 	// wether to update train or problem in screen
@@ -60,7 +60,7 @@ void Game::Update()
 
 		for (int i = 0; i < 3; i++)
 		{
-			if (!wagons[i]->IsInList())
+			if (wagons[i] != NULL && !wagons[i]->IsInList())
 			{
 				wagons[i]->Update();
 			}
@@ -75,7 +75,7 @@ void Game::Update()
 	// Check collision with individual wagons
 	for (int i = 0; i < 3 && !isCurrentProblem; i++)
 	{
-		if (!wagons[i]->IsInList()) 
+		if (wagons[i] != NULL && !wagons[i]->IsInList()) 
 		{
 			if (wagons[i]->Intersects(train.First()->GetBounds()))
 			{
@@ -111,7 +111,7 @@ void Game::Draw()
 	}
 
 	for (int i = 0; i < 3; i++) {
-		if (wagons[i] && !wagons[i]->IsInList())
+		if (wagons[i] != NULL && !wagons[i]->IsInList())
 		{
 			wagons[i]->Draw(window);
 		}
@@ -131,11 +131,16 @@ void Game::InitWindow()
 
 void Game::Loop() 
 {
-	while (window->isOpen() && !isGameOver) 
+	while (window->isOpen()) 
 	{
-		Update();
-		EventHandling();
-		Draw();
+		if (!isGameOver) {
+			Update();
+			EventHandling();
+			Draw();
+		} 
+		else {
+			EndGame();
+		}
 	}
 }
 
@@ -169,9 +174,9 @@ void Game::EventHandling()
 	}
 }
 
-void Game::CheckWinLoseConditionForWagon(bool isWin)
+void Game::CheckWinLoseConditionForWagon(bool win)
 {
-	if (isWin)
+	if (win)
 	{
 		// Insert wagon in train
 		currentWagon->SetValue(currentProblem->Value());
@@ -191,9 +196,10 @@ void Game::CheckWinLoseConditionForWagon(bool isWin)
 		amountOfWagons--;
 
 		// Check global win condition
-		if (amountOfWagons < 2)
+		if (amountOfWagons < 1)
 		{
-			EndGame(false);
+			isWin = false;
+			isGameOver = true;
 		}
 	}
 
@@ -245,10 +251,8 @@ void Game::InitSound()
 	clockSound.setBuffer(clockSb);
 }
 
-void Game::EndGame(bool isWin)
+void Game::EndGame()
 {
-	isGameOver = true;
-
 	if (isWin) 
 	{
 		txtGameOver = Text("You won!", font, 15);
@@ -264,17 +268,16 @@ void Game::EndGame(bool isWin)
 	txtTime.setFillColor(Color::Black);
 	txtGameOver.setPosition(200, 250);
 
+	window->clear(Color::Black);
+	window->draw(txtGameOver);
+	window->draw(txtTime);
+	window->display();
 
 	Event evt;
-	while (window->waitEvent(evt))
+	while (window->pollEvent(evt))
 	{
 		if (evt.type == Event::Closed) {
 			window->close();
 		}
-
-		window->clear(Color::Black);
-		window->draw(txtGameOver);
-		window->draw(txtTime);
-		window->display();
 	}
 }
